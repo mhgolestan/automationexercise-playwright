@@ -1,6 +1,6 @@
 import { expect, request } from "@playwright/test";
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 export async function registerUser(email: string, password: string) {
     const baseUrl = process.env.BASE_URL;
