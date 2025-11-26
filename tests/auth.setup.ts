@@ -1,20 +1,18 @@
 import { test as setup } from "@playwright/test";
 import { generateRandomUser } from "@datafactory/register";
-import * as fs from "node:fs";
 import * as path from "node:path";
 
 const user01AuthFile = path.join(__dirname, '../.auth/user01Auth.json');
+setup.use({
+  headless: true,
+});
 
 setup("Create test user before tests", async ({ page, context }) => {
-  
-  await generateRandomUser();
-  
-  const registeredUserPath = path.join(process.cwd(), '.auth/registeredUser.json');
-  const registeredUser = JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
+  const registeredUser = await generateRandomUser();
 
   await page.goto('https://www.automationexercise.com/');
   await page.getByRole("button", { name: "Consent" }).click();
-  await page.getByRole("link", { name: " Signup / Login" }).click();
+  await page.getByRole("link", { name: "Signup / Login" }).click();
 
   await page.getByTestId("signup-name").fill(registeredUser.username);
   await page.getByTestId("signup-email").fill(registeredUser.email);
