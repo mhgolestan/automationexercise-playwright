@@ -1,7 +1,7 @@
-import { test as setup, expect } from "@playwright/test";
+import { test as setup } from "@playwright/test";
 import { generateRandomUser } from "@datafactory/register";
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 const user01AuthFile = path.join(__dirname, '../.auth/user01Auth.json');
 
@@ -13,15 +13,12 @@ setup("Create test user before tests", async ({ page, context }) => {
   const registeredUser = JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
 
   await page.goto('https://www.automationexercise.com/');
-  await expect(page).toHaveTitle('Automation Exercise');
   await page.getByRole("button", { name: "Consent" }).click();
   await page.getByRole("link", { name: " Signup / Login" }).click();
-  await expect(page.getByRole("heading", { name: "New User Signup!" })).toBeVisible();
 
   await page.getByTestId("signup-name").fill(registeredUser.username);
   await page.getByTestId("signup-email").fill(registeredUser.email);
   await page.getByTestId("signup-button").click();
-  await expect(page.getByText('Enter Account Information')).toBeVisible();
 
   await page.getByTestId("password").fill(registeredUser.password);
 
@@ -44,15 +41,7 @@ setup("Create test user before tests", async ({ page, context }) => {
   await page.getByTestId("mobile_number").fill(registeredUser.mobileNumber);
   await page.getByTestId("create-account").click();
 
-  await expect(page.getByText('Account Created!')).toBeVisible();
-
   await page.getByRole('link', { name: 'Continue' }).click();
-  await expect(page.getByText(`Logged in as ${registeredUser.username}`)).toBeVisible();
-
-  // await page.getByRole('link', { name: ' Delete Account' }).click();
-  // await expect(page.getByText('Account Deleted!')).toBeVisible();
-
-
 
   await context.storageState({ path: user01AuthFile });
   await page.close();

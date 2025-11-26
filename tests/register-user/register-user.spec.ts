@@ -1,13 +1,9 @@
-import { expect, test } from "@playwright/test";
-import { HomePage } from "@pages/home/home.page";
-import { SignupLoginPage } from "@pages/signup-login/signup-login.page";
-import { SignupFormPage } from "@pages/signup-form/signup-form.page";
-import * as fs from "fs";
-import * as path from "path";
+import { test, expect } from "@fixtures/pages.fixtures";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
-test.describe("Register New User ", () => {
-  test.beforeEach(async ({ page }) => {
-    const homePage = new HomePage(page);
+test.describe("Register User Suite ", () => {
+  test.beforeEach(async ({ page, homePage }) => {
     await homePage.goto();
     await page.getByRole("button", { name: "Consent" }).click();
     await homePage.navigateToSignupLogin();
@@ -16,10 +12,8 @@ test.describe("Register New User ", () => {
     await page.close();
   });
 
-  test("Register New User", async ({ page }) => {
-    const signupLoginPage = new SignupLoginPage(page);
-    const signupFormPage = new SignupFormPage(page);
-  
+  test("Register New User", async ({ page, signupLoginPage, signupFormPage }) => {
+
     await test.step("Navigate to signup page", async () => {
       await expect(
         page.getByRole("heading", { name: "New User Signup!" })
@@ -47,42 +41,27 @@ test.describe("Register New User ", () => {
       await expect(page.getByText("Account Deleted!")).toBeVisible();
     });
   });
-});
 
-test.describe("Create existing user", () => {
-  test.beforeEach(async ({ page }) => {
-    // Step 1 & 2: Launch browser and navigate to url
-    await page.goto('http://automationexercise.com');
-    
-    // Step 3: Verify that home page is visible successfully
-    await expect(page).toHaveTitle('Automation Exercise');
-    await page.getByRole("button", { name: "Consent" }).click();
-  });
 
-  test.afterEach(async ({ page }) => {
-    await page.close();
-  });
+  test("signup with already registered email", async ({ page, signupLoginPage }) => {
+    await test.step("Click on 'Signup / Login' button", async () => {
+      await page.getByRole("link", { name: " Signup / Login" }).click();
+    });
 
-  test("signup with already registered email", async ({ page }) => {
-    // Step 4: Click on 'Signup / Login' button
-    await page.getByRole("link", { name: " Signup / Login" }).click();
-    
-    // Step 5: Verify 'New User Signup!' is visible
-    await expect(page.getByRole("heading", { name: "New User Signup!" })).toBeVisible();
-    
-    // Read registered user from file
+    await test.step("Verify 'New User Signup!' is visible", async () => {
+      await expect(page.getByRole("heading", { name: "New User Signup!" })).toBeVisible();
+    });
+
     const registeredUserPath = path.join(process.cwd(), '.auth/registeredUser.json');
     const registeredUser = JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
+
+    await test.step("Attempt signup with existing email", async () => {
+    await signupLoginPage.signup(registeredUser.username, registeredUser.email);
+    });
     
-    // Step 6: Enter name and already registered email address
-    await page.getByTestId("signup-name").fill(registeredUser.username);
-    await page.getByTestId("signup-email").fill(registeredUser.email);
-    
-    // Step 7: Click 'Signup' button
-    await page.getByTestId("signup-button").click();
-    
-    // Step 8: Verify error 'Email Address already exist!' is visible
-    await expect(page.getByText('Email Address already exist!')).toBeVisible();
+    await test.step("Verify error 'Email Address already exist!' is visible", async () => {
+      await expect(page.getByText('Email Address already exist!')).toBeVisible();
+    });
   });
 });
 
