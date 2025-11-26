@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@datafactory/*": ["lib/datafactory/*"],
+            "@helpers/*": ["lib/helpers/*"],
+            "@pages/*": ["lib/pages/*"],
+            "@utils/*": ["lib/utils/*"],
+            "@fixtures/*": ["lib/fixtures/*"]
+        }
+    }
+}
