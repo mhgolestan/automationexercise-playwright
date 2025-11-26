@@ -5,7 +5,7 @@ import * as path from "node:path";
 test.describe("Register User Suite ", () => {
   test.beforeEach(async ({ page, homePage }) => {
     await homePage.goto();
-    await page.getByRole("button", { name: "Consent" }).click();
+    await homePage.popupConsent();
     await homePage.navigateToSignupLogin();
   });
   test.afterEach(async ({ page }) => {

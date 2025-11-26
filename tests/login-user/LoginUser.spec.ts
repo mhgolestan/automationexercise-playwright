@@ -9,7 +9,7 @@ test.describe("Authentication Suite", () => {
     test.describe("Login", () => {
         test.beforeEach(async ({ page, homePage }) => {
             await homePage.goto();
-            await page.getByRole("button", { name: "Consent" }).click();
+            await homePage.popupConsent();
         });
         test.afterEach(async ({ page }) => {
             await page.close();
