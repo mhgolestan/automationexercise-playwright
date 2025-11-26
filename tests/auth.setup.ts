@@ -11,7 +11,11 @@ setup("Create test user before tests", async ({ page, context }) => {
   const registeredUser = await generateRandomUser();
 
   await page.goto('https://www.automationexercise.com/');
-  await page.getByRole("button", { name: "Consent" }).click();
+  // await page.getByRole("button", { name: "Consent" }).click();
+  const consentButton = page.getByRole("button", { name: "Consent" });
+  if (await consentButton.isVisible()) {
+    await consentButton.click();
+  }
   await page.getByRole("link", { name: "Signup / Login" }).click();
 
   await page.getByTestId("signup-name").fill(registeredUser.username);
