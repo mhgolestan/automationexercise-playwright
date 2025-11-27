@@ -7,7 +7,17 @@ const authFile = path.join(__dirname, '../../.auth/user01Auth.json');
 test.describe("User Login Suite", () => {
     test.describe("Login", () => {
         const registeredUserPath = path.join(process.cwd(), '.auth/registeredUser.json');
-        const registeredUser = JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
+        const registeredUser = (() => {
+            try {
+                if (fs.existsSync(registeredUserPath)) {
+                    return JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
+                }
+                return null;
+            } catch (error) {
+                console.warn(`Could not read registered user file at ${registeredUserPath}:`, error);
+                return null;
+            }
+        })();
 
         test.beforeEach(async ({ homePage, page }) => {
             await test.step("1. Launch browser and 2. Navigate to home page", async () => {
