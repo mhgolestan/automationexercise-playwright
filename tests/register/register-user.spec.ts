@@ -1,7 +1,6 @@
 import { generateUserData } from "@datafactory/register";
 import { test, expect } from "@fixtures/pages.fixtures";
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { getRegisteredUser } from "@helpers/auth-helper";
 
 test.describe("Register User Suite ", () => {
 
@@ -75,9 +74,7 @@ test.describe("Register User Suite ", () => {
 
 
   test("Test Case 5: Register User with existing email", async ({ page, signupLoginPage }) => {
-
-    const registeredUserPath = path.join(process.cwd(), '.auth/registeredUser.json');
-    const { name, email } = JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
+    const { name, email} = getRegisteredUser();
 
     await test.step("6. Enter name and already registered email address", async () => {
       await signupLoginPage.signupForm(name, email);

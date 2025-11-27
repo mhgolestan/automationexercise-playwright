@@ -1,23 +1,10 @@
 import { test, expect } from "@fixtures/pages.fixtures";
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { getRegisteredUser } from "@helpers/auth-helper";
 
-const authFile = path.join(__dirname, '../../.auth/user01Auth.json');
 
 test.describe("User Login Suite", () => {
     test.describe("Login", () => {
-        const registeredUserPath = path.join(process.cwd(), '.auth/registeredUser.json');
-        const registeredUser = (() => {
-            try {
-                if (fs.existsSync(registeredUserPath)) {
-                    return JSON.parse(fs.readFileSync(registeredUserPath, 'utf-8'));
-                }
-                return null;
-            } catch (error) {
-                console.warn(`Could not read registered user file at ${registeredUserPath}:`, error);
-                return null;
-            }
-        })();
+        const registeredUser = getRegisteredUser();
 
         test.beforeEach(async ({ homePage, page }) => {
             await test.step("1. Launch browser and 2. Navigate to home page", async () => {
@@ -95,8 +82,6 @@ test.describe("User Login Suite", () => {
                 await expect(page.getByText("Login to your account")).toBeVisible();
             });
         });
-
-
     });
 });
 
