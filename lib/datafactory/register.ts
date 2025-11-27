@@ -48,30 +48,3 @@ export async function registerUser() {
 
     return response.status();
 }
-
-export async function generateRandomUser() {
-    const randomUser = {
-        username: `test_user_${Date.now()}`,
-        email: `test${Date.now()}@test.test`,
-        password: "test!234567",
-        firstName: "test_user",
-        lastName: "test_lastName",
-        company: "test_company",
-        address: "test_address",
-        country: "United States",
-        state: "Texas",
-        city: "Texas",
-        zipcode: "123456",
-        mobileNumber: "123456",
-    };
-
-    const authDir = path.join(process.cwd(), ".auth");
-    if (!fs.existsSync(authDir)) {
-        fs.mkdirSync(authDir, { recursive: true });
-    }
-
-    const filePath = path.join(authDir, "registeredUser.json");
-    fs.writeFileSync(filePath, JSON.stringify(randomUser, null, 2));
-
-    return randomUser;
-}
