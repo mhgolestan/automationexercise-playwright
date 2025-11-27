@@ -34,7 +34,7 @@ test.describe("Register User Suite ", () => {
     const userData = generateUserData();
 
     await test.step("6. Enter name and email address", async () => {
-      signupLoginPage.signupForm(userData.name, userData.email);
+      await signupLoginPage.signupForm(userData.name, userData.email);
     });
 
     await test.step("7. Click 'Signup' button", async () => {
