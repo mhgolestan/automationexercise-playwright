@@ -39,22 +39,25 @@ export class SignupFormPage {
     this.createAccountButton = page.getByTestId('create-account');
   }
 
-  async fillSignupForm() {
-    await this.page.getByTestId('password').fill('your_password');
-    await this.page.locator('#days').selectOption('1');
-    await this.page.locator('#months').selectOption('1');
-    await this.page.locator('#years').selectOption('2000');
+  async fillSignupForm(userData) {
+    await this.page.getByTestId('password').fill(userData.password);
+    await this.page.locator('#days').selectOption(userData.birth_date);
+    await this.page.locator('#months').selectOption(userData.birth_month);
+    await this.page.locator('#years').selectOption(userData.birth_year);
     await this.page.getByRole('checkbox', { name: 'Sign up for our newsletter!' }).check();
     await this.page.getByRole('checkbox', { name: 'Receive special offers from' }).check();
-    await this.page.getByTestId('first_name').fill('your_first_name');
-    await this.page.getByTestId('last_name').fill('your_last_name');
-    await this.page.getByTestId('company').fill('your_company');
-    await this.page.getByTestId('address').fill('your_address');
+    await this.page.getByTestId('first_name').fill(userData.firstname);
+    await this.page.getByTestId('last_name').fill(userData.lastname);
+    await this.page.getByTestId('company').fill(userData.company);
+    await this.page.getByTestId('address').fill(userData.address1);
     await this.page.getByLabel('Country *').selectOption(randomCountry());
-    await this.page.getByTestId('state').fill('your_state');
-    await this.page.getByTestId('city').fill('your_city');
-    await this.page.getByTestId('zipcode').fill('your_zipcode');
-    await this.page.getByTestId('mobile_number').fill('your_mobile_number');
-    await this.page.getByTestId('create-account').click();
+    await this.page.getByTestId('state').fill(userData.state);
+    await this.page.getByTestId('city').fill(userData.city);
+    await this.page.getByTestId('zipcode').fill(userData.zipcode);
+    await this.page.getByTestId('mobile_number').fill(userData.mobile_number);
+  }
+  
+  async submitSignupForm() {
+    await this.createAccountButton.click();
   }
 }

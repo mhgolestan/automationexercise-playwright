@@ -24,15 +24,20 @@ export class SignupLoginPage {
     await this.page.goto(process.env.BASE_URL + "/login");
   }
 
-  async login(email: string, password: string) {
+  async loginForm(email: string, password: string) {
     await this.signinEmailInput.fill(email);
     await this.signinPasswordInput.fill(password);
+  }
+  
+  async submitLogin() {
     await this.signinButton.click();
   }
 
-  async signup(name: string, email: string) {
+  async signupForm(name: string, email: string) {
     await this.signupNameInput.fill(name);
     await this.signupEmailInput.fill(email);
+  }
+  async submitSignup() {
     await this.signupButton.click();
   }
 }
