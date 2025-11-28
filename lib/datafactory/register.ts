@@ -31,7 +31,7 @@ export async function registerUser() {
     const context = await request.newContext();
 
     const response = await context.post(
-        process.env.BASE_URL + "/api/createAccount",
+        process.env.BASE_URL_API + "/createAccount",
         {
             form: user
         }
