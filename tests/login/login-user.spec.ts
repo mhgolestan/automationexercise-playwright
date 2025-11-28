@@ -12,7 +12,7 @@ test.describe("User Login Suite", () => {
             });
 
             await test.step("3. Verify that home page is visible successfully", async () => {
-                await page.waitForLoadState('networkidle');
+                await page.waitForLoadState('domcontentloaded');
                 await homePage.popupConsent();
                 await expect(homePage.locatorHomepageHeader).toBeVisible();
             });
@@ -24,10 +24,6 @@ test.describe("User Login Suite", () => {
             await test.step("5. Verify 'Login to your account' is visible", async () => {
                 await expect(page.getByRole("heading", { name: "Login to your account" })).toBeVisible();
             });
-        });
-
-        test.afterEach(async ({ page }) => {
-            await page.close();
         });
 
         test("Test Case 2: Login User with correct email and password", async ({ page, homePage, signupLoginPage }) => {

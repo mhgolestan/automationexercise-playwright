@@ -10,7 +10,7 @@ test.describe("Register User Suite ", () => {
     });
 
     await test.step("3. Verify that home page is visible successfully", async () => {
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await homePage.popupConsent();
       await expect(homePage.locatorHomepageHeader).toBeVisible();
     });
@@ -23,10 +23,6 @@ test.describe("Register User Suite ", () => {
       await expect(page.getByRole("heading", { name: "New User Signup!" })).toBeVisible();
     });
 
-  });
-
-  test.afterEach(async ({ page }) => {
-    await page.close();
   });
 
   test("Test Case 1: Register User", async ({ page, signupLoginPage, signupFormPage }) => {
