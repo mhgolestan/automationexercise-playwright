@@ -8,6 +8,9 @@ export class SignupLoginPage {
   readonly signinEmailInput: Locator;
   readonly signinPasswordInput: Locator;
   readonly signinButton: Locator;
+  readonly loginErrorMessage: Locator;
+  readonly loginHeader: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -18,6 +21,13 @@ export class SignupLoginPage {
     this.signinEmailInput = page.getByTestId("login-email");
     this.signinPasswordInput = page.getByTestId("login-password");
     this.signinButton = page.getByTestId("login-button");
+
+    this.loginErrorMessage = page.getByText("Your email or password is incorrect!");
+    this.loginHeader = page.getByRole("heading", { name: "Login to your account" });
+    }
+
+  async waitForPageLoad() {
+    await this.page.waitForLoadState('load');
   }
 
   async goto() {

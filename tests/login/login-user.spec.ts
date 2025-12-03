@@ -6,13 +6,13 @@ test.describe("User Login Suite", () => {
     test.describe("Login", () => {
         const registeredUser = getRegisteredUser();
 
-        test.beforeEach(async ({ homePage, page }) => {
+        test.beforeEach(async ({ homePage, signupLoginPage }) => {
             await test.step("1. Launch browser and 2. Navigate to home page", async () => {
                 await homePage.goto();
             });
 
             await test.step("3. Verify that home page is visible successfully", async () => {
-                await page.waitForLoadState('domcontentloaded');
+                await homePage.waitForPageLoad();
                 await homePage.popupConsent();
                 await expect(homePage.locatorHomepageHeader).toBeVisible();
             });
@@ -22,11 +22,11 @@ test.describe("User Login Suite", () => {
             });
 
             await test.step("5. Verify 'Login to your account' is visible", async () => {
-                await expect(page.getByRole("heading", { name: "Login to your account" })).toBeVisible();
+                await expect(signupLoginPage.loginHeader).toBeVisible();
             });
         });
 
-        test("Test Case 2: Login User with correct email and password", async ({ page, homePage, signupLoginPage }) => {
+        test("Test Case 2: Login User with correct email and password", async ({ homePage, signupLoginPage }) => {
 
             await test.step("6. Enter correct email address and password", async () => {
                 await signupLoginPage.loginForm(registeredUser.email, registeredUser.password);
@@ -37,11 +37,11 @@ test.describe("User Login Suite", () => {
             });
 
             await test.step("8. Verify that 'Logged in as username' is visible", async () => {
-                await expect(page.getByText(`Logged in as ${registeredUser.name}`)).toBeVisible();
+                await expect(homePage.getLoggedInAsText(registeredUser.name)).toBeVisible();
             });
         });
 
-        test("Test Case 3: Login User with incorrect email and password", async ({ page, homePage, signupLoginPage }) => {
+        test("Test Case 3: Login User with incorrect email and password", async ({ signupLoginPage }) => {
 
             await test.step("6. Enter incorrect email address and password", async () => {
                 await signupLoginPage.loginForm('wrongEmail@test.test', 'wrongPassword');
@@ -52,11 +52,11 @@ test.describe("User Login Suite", () => {
             });
 
             await test.step("8. Verify that 'Your email or password is incorrect!' is visible", async () => {
-                await expect(page.getByText("Your email or password is incorrect!")).toBeVisible();
+                await expect(signupLoginPage.loginErrorMessage).toBeVisible();
             });
         });
 
-        test("Test Case 4: Logout user after login", async ({ page, homePage, signupLoginPage }) => {
+        test("Test Case 4: Logout user after login", async ({ homePage, signupLoginPage }) => {
 
             await test.step("6. Enter correct email address and password", async () => {
                 await signupLoginPage.loginForm(registeredUser.email, registeredUser.password);
@@ -67,15 +67,16 @@ test.describe("User Login Suite", () => {
             });
 
             await test.step("8. Verify that 'Logged in as username' is visible", async () => {
-                await expect(page.getByText(`Logged in as ${registeredUser.name}`)).toBeVisible();
+
+                await expect(homePage.getLoggedInAsText(registeredUser.name)).toBeVisible();
             });
 
             await test.step("9. Click 'Logout' button", async () => {
-                await page.getByRole("link", { name: " Logout" }).click();
+                await homePage.logout();
             });
 
             await test.step("10. Verify that user is navigated to login page", async () => {
-                await expect(page.getByText("Login to your account")).toBeVisible();
+                await expect(signupLoginPage.loginHeader).toBeVisible();
             });
         });
     });
