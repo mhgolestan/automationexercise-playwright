@@ -4,13 +4,13 @@ import { getRegisteredUser } from "@helpers/auth-helper";
 
 test.describe("Register User Suite ", () => {
 
-  test.beforeEach(async ({ page, homePage }) => {
+  test.beforeEach(async ({ homePage, signupLoginPage }) => {
     await test.step("1. Launch browser and 2. Navigate to home page", async () => {
       await homePage.goto();
     });
 
     await test.step("3. Verify that home page is visible successfully", async () => {
-      await page.waitForLoadState('domcontentloaded');
+      await homePage.waitForPageLoad();
       await homePage.popupConsent();
       await expect(homePage.locatorHomepageHeader).toBeVisible();
     });
@@ -20,12 +20,12 @@ test.describe("Register User Suite ", () => {
     });
 
     await test.step("5. Verify 'New User Signup!' is visible", async () => {
-      await expect(page.getByRole("heading", { name: "New User Signup!" })).toBeVisible();
+      await expect(signupLoginPage.newUserSignupHeader).toBeVisible();
     });
 
   });
 
-  test("Test Case 1: Register User", async ({ page, signupLoginPage, signupFormPage }) => {
+  test("Test Case 1: Register User", async ({ homePage, signupLoginPage, signupFormPage }) => {
     const userData = generateUserData();
 
     await test.step("6. Enter name and email address", async () => {
@@ -37,7 +37,7 @@ test.describe("Register User Suite ", () => {
     });
 
     await test.step("8. Verify that 'Enter Account Information' is visible", async () => {
-      await expect(page.getByText("Enter Account Information")).toBeVisible();
+      await expect(signupFormPage.enterAccountInfoHeader).toBeVisible();
     });
 
     await test.step("9, 10, 11 and 12. Fill signup form", async () => {
@@ -49,28 +49,29 @@ test.describe("Register User Suite ", () => {
     });
 
     await test.step("14. Verify that 'Account Created!' is visible", async () => {
-      await expect(page.getByText("Account Created!")).toBeVisible();
+      await expect(signupFormPage.accountCreatedText).toBeVisible();
     });
+
     await test.step("15. Click 'Continue' button", async () => {
-      await page.getByRole("link", { name: "Continue" }).click();
+      await signupFormPage.clickContinue();
     });
-    
+
     await test.step("16. Verify that 'Logged in as username' is visible", async () => {
-      await expect(page.getByText(`Logged in as ${userData.name}`)).toBeVisible();
+      await expect(homePage.getLoggedInAsText(userData.name)).toBeVisible();
     });
 
     await test.step("17. Click 'Delete Account' button", async () => {
-      await page.getByRole("link", { name: " Delete Account" }).click();
+      await signupFormPage.clickDeleteAccount();
     });
 
     await test.step("18. Verify that 'ACCOUNT DELETED!' is visible and click 'Continue' button", async () => {
-      await expect(page.getByText("Account Deleted!")).toBeVisible();
+      await expect(signupFormPage.accountDeletedText).toBeVisible();
     });
   });
 
 
-  test("Test Case 5: Register User with existing email", async ({ page, signupLoginPage }) => {
-    const { name, email} = getRegisteredUser();
+  test("Test Case 5: Register User with existing email", async ({ signupLoginPage }) => {
+    const { name, email } = getRegisteredUser();
 
     await test.step("6. Enter name and already registered email address", async () => {
       await signupLoginPage.signupForm(name, email);
@@ -81,7 +82,7 @@ test.describe("Register User Suite ", () => {
     });
 
     await test.step("8. Verify error 'Email Address already exist!' is visible", async () => {
-      await expect(page.getByText('Email Address already exist!')).toBeVisible();
+      await expect(signupLoginPage.emailExistsError).toBeVisible();
     });
   });
 });

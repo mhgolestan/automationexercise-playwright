@@ -10,7 +10,8 @@ export class SignupLoginPage {
   readonly signinButton: Locator;
   readonly loginErrorMessage: Locator;
   readonly loginHeader: Locator;
-
+  readonly newUserSignupHeader: Locator;
+  readonly emailExistsError: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,7 +25,9 @@ export class SignupLoginPage {
 
     this.loginErrorMessage = page.getByText("Your email or password is incorrect!");
     this.loginHeader = page.getByRole("heading", { name: "Login to your account" });
-    }
+    this.newUserSignupHeader = page.getByRole("heading", { name: "New User Signup!" });
+    this.emailExistsError = page.getByText("Email Address already exist!");
+  }
 
   async waitForPageLoad() {
     await this.page.waitForLoadState('load');

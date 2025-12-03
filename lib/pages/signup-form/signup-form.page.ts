@@ -18,7 +18,11 @@ export class SignupFormPage {
   readonly zipcodeInput: Locator;
   readonly mobileNumberInput: Locator;
   readonly createAccountButton: Locator;
-
+  readonly enterAccountInfoHeader: Locator;
+  readonly accountCreatedText: Locator;
+  readonly continueButton: Locator;
+  readonly deleteAccountLink: Locator;
+  readonly accountDeletedText: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -37,6 +41,11 @@ export class SignupFormPage {
     this.zipcodeInput = page.getByTestId('zipcode');
     this.mobileNumberInput = page.getByTestId('mobile_number');
     this.createAccountButton = page.getByTestId('create-account');
+    this.enterAccountInfoHeader = page.getByText("Enter Account Information");
+    this.accountCreatedText = page.getByText("Account Created!");
+    this.continueButton = page.getByRole("link", { name: "Continue" });
+    this.deleteAccountLink = page.getByRole("link", { name: " Delete Account" });
+    this.accountDeletedText = page.getByText("Account Deleted!");
   }
 
   async fillSignupForm(userData) {
@@ -59,5 +68,13 @@ export class SignupFormPage {
   
   async submitSignupForm() {
     await this.createAccountButton.click();
+  }
+
+  async clickContinue() {
+    await this.continueButton.click();
+  }
+
+  async clickDeleteAccount() {
+    await this.deleteAccountLink.click();
   }
 }
