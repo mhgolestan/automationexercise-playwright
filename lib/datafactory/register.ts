@@ -1,26 +1,39 @@
 import { expect, request } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+
 import * as fs from "node:fs";
 import * as path from "node:path";
 
 export function generateUserData() {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    
     return {
-        name: "JohnDoe92",
-        email: `user_${Date.now()}@example.com`,
-        password: "P@ssw0rd123!",
-        title: "Mr",
-        birth_date: "15",
-        birth_month: "June",
-        birth_year: "1992",
-        firstname: "John",
-        lastname: "Doe",
-        company: "TechNova Solutions",
-        address1: "123 Elm Street",
-        address2: "Apt 4B",
-        country: "United States",
-        zipcode: "90210",
-        state: "California",
-        city: "Los Angeles",
-        mobile_number: "+1 555 908 4421"
+        name: faker.internet.username({ firstName, lastName }),
+        email: faker.internet.email({ firstName, lastName }),
+        password: faker.internet.password({ length: 12, memorable: false }),
+        title: faker.helpers.arrayElement(["Mr", "Mrs", "Miss"]),
+        birth_date: faker.number.int({ min: 1, max: 28 }).toString(),
+        birth_month: faker.date.month(),
+        birth_year: faker.number.int({ min: 1950, max: 2005 }).toString(),
+        firstname: firstName,
+        lastname: lastName,
+        company: faker.company.name(),
+        address1: faker.location.streetAddress(),
+        address2: faker.location.secondaryAddress(),
+        country: faker.helpers.arrayElement([
+            "India",
+            "United States",
+            "Canada",
+            "Australia",
+            "Israel",
+            "New Zealand",
+            "Singapore"
+        ]),
+        zipcode: faker.location.zipCode(),
+        state: faker.location.state(),
+        city: faker.location.city(),
+        mobile_number: faker.phone.number()
     };
 }
 
